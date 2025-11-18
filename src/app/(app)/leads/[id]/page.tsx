@@ -19,7 +19,11 @@ export default function LeadDetailsPage() {
 
   if (!id) return notFound();
 
-  const { data: leadData, isLoading, error } = useQuery({
+  const {
+    data: leadData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["lead", id],
     queryFn: () => leadsAPI.getById(id),
     retry: 2,
@@ -56,19 +60,22 @@ export default function LeadDetailsPage() {
   }
 
   const lead = leadData.data;
-  const linkedProject = lead.status === "Won" ? { id: lead._id, name: lead.title } : null;
+  const linkedProject =
+    lead.status === "Won" ? { id: lead._id, name: lead.title } : null;
 
-  const isAdmin = user?.userRoles?.some(r => (r.role?.key || "").toLowerCase() === "admin");
+  const isAdmin = user?.userRoles?.some(
+    (r) => (r.role?.key || "").toLowerCase() === "admin"
+  );
   const isCreator = lead && user ? lead.createdBy === user.name : false;
   const canEdit = Boolean(isAdmin || isCreator);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -77,7 +84,10 @@ export default function LeadDetailsPage() {
       <div className="flex items-center justify-between mb-3">
         <h1 className="text-lg md:text-xl font-semibold">Lead Details</h1>
         {canEdit && (
-          <Button variant="default" onClick={() => router.push(`/leads/${id}/edit`)}>
+          <Button
+            variant="default"
+            onClick={() => router.push(`/leads/${id}/edit`)}
+          >
             Edit
           </Button>
         )}
@@ -89,15 +99,18 @@ export default function LeadDetailsPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="text-xs text-muted-foreground">Customer</div>
-              <div className="text-lg font-medium">{lead.customer?.name || '-'}</div>
+              <div className="text-lg font-medium">
+                {lead.customer?.name || "-"}
+              </div>
             </div>
             <Badge
-              className={`border-0 ${lead.status === "Won"
-                ? "bg-green-100 text-green-800 hover:bg-green-200"
-                : lead.status === "Lost"
+              className={`border-0 ${
+                lead.status === "Won"
+                  ? "bg-green-100 text-green-800 hover:bg-green-200"
+                  : lead.status === "Lost"
                   ? "bg-red-100 text-red-800 hover:bg-red-200"
                   : "bg-blue-100 text-blue-800 hover:bg-blue-200"
-                }`}
+              }`}
             >
               {lead.status}
             </Badge>
@@ -123,15 +136,17 @@ export default function LeadDetailsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <div className="text-xs text-muted-foreground">Created By</div>
-              <div className="text-sm font-medium">{lead.createdBy || '-'}</div>
+              <div className="text-sm font-medium">{lead.createdBy || "-"}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Source</div>
-              <div className="text-sm font-medium">{lead.source || '-'}</div>
+              <div className="text-sm font-medium">{lead.source || "-"}</div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Created Date</div>
-              <div className="text-sm font-medium">{lead.createdAt ? formatDate(lead.createdAt) : '-'}</div>
+              <div className="text-sm font-medium">
+                {lead.createdAt ? formatDate(lead.createdAt) : "-"}
+              </div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Lead ID</div>
@@ -144,10 +159,19 @@ export default function LeadDetailsPage() {
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-medium text-green-800">Linked Project</div>
-                  <div className="text-sm text-green-700">{linkedProject.name}</div>
+                  <div className="text-sm font-medium text-green-800">
+                    Linked Project
+                  </div>
+                  <div className="text-sm text-green-700">
+                    {linkedProject.name}
+                  </div>
                 </div>
-                <Button asChild size="sm" variant="outline" className="border-green-300 text-green-700 hover:bg-green-100">
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-green-300 text-green-700 hover:bg-green-100"
+                >
                   <Link href={`/projects`}>View in Projects</Link>
                 </Button>
               </div>
@@ -170,5 +194,3 @@ export default function LeadDetailsPage() {
     </div>
   );
 }
-
-
